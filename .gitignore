@@ -3,3 +3,9 @@
 .AppleDouble
 .LSOverride
 ._*
+
+# Secrets
+secrets.env
+
+# Generated files (built from templates at deploy time)
+persona/vel.json
