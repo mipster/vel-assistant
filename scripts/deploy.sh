@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 SECRETS_FILE="$REPO_ROOT/secrets.env"
-MARK2_HOST="${MARK2_HOST:-mycroft.local}"
+MARK2_HOST="${MARK2_HOST:-pi@192.168.132.142}"
 
 # Load secrets
 if [[ ! -f "$SECRETS_FILE" ]]; then
