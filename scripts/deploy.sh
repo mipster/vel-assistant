@@ -22,6 +22,39 @@ rsync -av "$REPO_ROOT/persona/vel.json" "${MARK2_HOST}:~/.config/ovos_persona/ve
 rsync -av "$REPO_ROOT/skill-vel-router/" "${MARK2_HOST}:~/.local/share/mycroft/skills/skill-vel-router/"
 rsync -av "$REPO_ROOT/config/mycroft.conf.patch" "${MARK2_HOST}:~/mycroft.conf.patch"
 
+# Patch ElevenLabs plugin for dynamic voice_id and speed support
+ssh "${MARK2_HOST}" "python3 << 'PYEOF'
+path = '/home/pi/.venvs/ovos/lib/python3.11/site-packages/ovos_tts_plugin_elevenlabs/__init__.py'
+with open(path, 'r') as f:
+    content = f.read()
+
+# Ensure speed is in __init__
+if 'self.speed' not in content:
+    content = content.replace(
+        'self.use_speaker_boost = self.config.get(\"use_speaker_boost\", True)',
+        'self.use_speaker_boost = self.config.get(\"use_speaker_boost\", True)\n        self.speed = self.config.get(\"speed\", 1.0)'
+    )
+
+# Ensure speed is in payload
+if '\"speed\": self.speed' not in content:
+    content = content.replace(
+        '\"voice_settings\": {',
+        '\"speed\": self.speed,\n            \"voice_settings\": {'
+    )
+
+# Ensure voice_id is read dynamically per call
+if 'self.config.get(\"voice_id\"' not in content:
+    content = content.replace(
+        'url = f\"https://api.elevenlabs.io/v1/text-to-speech/{self.voice_id}\"',
+        'voice_id = self.config.get(\"voice_id\", self.voice_id)\n        url = f\"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}\"'
+    )
+
+with open(path, 'w') as f:
+    f.write(content)
+print('ElevenLabs plugin patched')
+PYEOF"
+echo "Plugin patch applied"
+
 # Inject TTS config into mycroft.conf on device
 ssh "${MARK2_HOST}" "python3 -c \"
 import json

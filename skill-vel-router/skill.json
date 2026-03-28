@@ -1,0 +1,9 @@
+{
+  "skillname": "VelRouterSkill",
+  "name": "Vel Router",
+  "description": "Routes wake word detections to activate/deactivate the Vel persona with GUI background switching.",
+  "version": "0.1.0",
+  "authorname": "maciej",
+  "license": "Apache-2.0",
+  "url": ""
+}
