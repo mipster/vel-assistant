@@ -5,4 +5,7 @@ setup(
     version="0.1.0",
     package_dir={"": "."},
     install_requires=["ovos-workshop"],
+    entry_points={
+        "opm.skill": ["skill-vel-router.maciej=__init__:VelRouterSkill"]
+    },
 )

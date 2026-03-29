@@ -1,5 +1,5 @@
 {
-  "name": "Alien",
+  "name": "vel",
   "solvers": [
     "ovos-solver-openai-plugin"
   ],
